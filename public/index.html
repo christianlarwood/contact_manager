@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Contact Manager</title>
+  <link rel="stylesheet" href="stylesheets/contactapp.css">
+  <script src="javascripts/jquery.js"></script>
+  <script src="javascripts/handlebars.js"></script>
+  <script type="module" src="javascripts/contactapp.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Contact Manager</h1>
+  </header>
+
+  <div id='search_container'>
+    <input type="text" size="40" id='search' placeholder="Search by name, phone #, email, or tag"><br>
+    <a href="#" type="button" id='add_contact'>Add Contact</a>
+    <a href="#" type="button" id='show_all_contacts'>Show All Contacts</a>
+  </div>
+
+
+  <div id="delete_modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p>Are you sure you want to delete the contact information for: <strong><span id='modal_contact_name'></span></strong>?</p>
+      <button id='yes'>Yes</button>
+      <button id='no'>No</button>
+    </div>
+  </div> 
+
+  <div id="contacts_container">
+  </div>
+
+  <div id='no_contacts_container'>
+    <p id="no_contacts_text">You have no contacts. Click the link below to add a contact.</p>
+    <a href="#" type="button" id='add_contact'>Add Contact</a>
+  </div>
+
+  <div id='add_new_contact'>
+    <h3>Add New Contact</h3>
+    <div id='add_contact_container'>
+    </div>
+  </div>
+
+  <div id='edit_contact'>
+    <h3>Edit Contact</h3>
+    <div id='edit_contact_container'>
+    </div>
+  </div>
+
+  <footer>
+    <h5>Developed by Christian Larwood for Launch School LS239 Practice Project</h5>
+  </footer>
+
+  <script id="contactsTemplate" type="text/x-handlebars">
+    <ul>
+    {{#each contacts}}
+      {{> contact}}
+    {{/each}}
+    </ul>
+  </script>
+
+  <script id="contactTemplate" data-type='partial' type="text/x-handlebars">
+      <li display="inline-flexbox">
+        <div data-contact-id={{id}} class="contact">
+          <h3>{{full_name}}</h3>
+          <div class="contact_info" data-contact-id={{id}}>
+            <dl>
+              <dt><strong>Phone Number:</strong> {{phone_number}}</dt>
+              <dt><strong>Email:</strong> {{email}}</dt>
+              <dt><strong>Tags:</strong>
+                {{#each tags}}
+                  <span class="contact_tag_button"><button>{{this}}</button></span>
+                {{/each}}
+              </dt>
+            </dl>
+          </div>
+          <button type='edit' id='edit' data-contact-id={{id}}>Edit</button>
+          <button type='delete' id='delete' data-contact-id={{id}}>Delete</button>
+        </div>
+      </li>
+  </script>
+
+  <script id="createContactTemplate" type="text/x-handlebars">
+    <form method='POST' id="new_contact" novalidate>
+      <label>Full name:  
+        <input type='text' name='full_name' id='full_name' value="{{full_name}}" data-contact-id="{{id}}" required minlength='3' placeholder="John Smith" pattern='[A-Za-z]+\s[A-Za-z]+'>
+      </label><br><br>
+      <label>Email:  
+        <input type="email" name="email" id="email" value="{{email}}" size="25" placeholder="someone@example.com" required pattern=".+@.+">
+      </label><br><br>
+      <label>Phone number:
+        <input type='text' name='phone_number' value="{{phone_number}}" id="phone_number" size="15" placeholder="111-222-3333" required pattern='\d{3}-\d{3}-\d{4}' minlength="12" maxlength="12">
+      </label><br><br>
+      <label name='tags' id='current_tags'>Tags:
+        {{#each tags}}
+          <span class="current_tag_button"><button>{{this}}</button></span>
+        {{/each}}
+      </label><br><br>
+      <label id='available_tags'>Available tags:</label><br><br>
+      <label>Create a tag:
+        <input type='text' id='new_tag' placeholder="marketing" size='15'>
+        <button id='add_tag_button'>Add tag</button>
+      </label><br><br>
+      <button type="submit" id="add_new_contact_button">Add New Contact</button>
+      <button type="cancel" id="cancel">Cancel</button>
+    </form>
+  </script>
+</body>
+</html>
+
